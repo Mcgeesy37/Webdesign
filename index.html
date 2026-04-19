@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CoreSetup Studio – Premium Webdesign Berlin</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Syne:wght@400;700;800&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav class="nav" id="nav">
+    <div class="nav__logo">CORE<span>SETUP</span>.STUDIO</div>
+    <ul class="nav__links">
+      <li><a href="#services">Leistungen</a></li>
+      <li><a href="#about">Über uns</a></li>
+      <li><a href="#contact" class="nav__cta">Projekt starten</a></li>
+    </ul>
+    <button class="nav__burger" id="burger" aria-label="Menü">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero" id="hero">
+    <div class="hero__grid-bg"></div>
+    <div class="hero__noise"></div>
+
+    <div class="hero__content">
+      <p class="hero__tag reveal">Berlin · Premium Digital Studio</p>
+      <h1 class="hero__headline reveal delay-1">
+        Websites,<br />
+        die <em>verkaufen.</em>
+      </h1>
+      <p class="hero__sub reveal delay-2">
+        Webdesign · Cybersecurity · SEO & Geo‑Optimierung.<br />
+        Kein Agentur-Chaos. Direkter Ansprechpartner.
+      </p>
+      <div class="hero__actions reveal delay-3">
+        <a href="#contact" class="btn btn--primary">Kostenlos anfragen</a>
+        <a href="#services" class="btn btn--ghost">Leistungen ansehen</a>
+      </div>
+    </div>
+
+    <div class="hero__badge">
+      <svg viewBox="0 0 120 120" class="badge__ring">
+        <path id="circlePath" d="M 60,60 m -45,0 a 45,45 0 1,1 90,0 a 45,45 0 1,1 -90,0" fill="none"/>
+        <text font-size="11.5" fill="currentColor" letter-spacing="3">
+          <textPath href="#circlePath">BERLIN · PREMIUM · DIGITAL · STUDIO · </textPath>
+        </text>
+      </svg>
+      <span class="badge__icon">✦</span>
+    </div>
+
+    <div class="hero__scroll-indicator">
+      <span>Scroll</span>
+      <div class="hero__scroll-line"></div>
+    </div>
+
+    <!-- floating stats -->
+    <div class="hero__stat hero__stat--1 reveal delay-2">
+      <span class="stat__num" data-target="48">0</span><span>h</span>
+      <p>Lieferzeit Erstkonzept</p>
+    </div>
+    <div class="hero__stat hero__stat--2 reveal delay-3">
+      <span class="stat__num" data-target="100">0</span><span>%</span>
+      <p>Performance-First</p>
+    </div>
+  </section>
+
+  <!-- MARQUEE -->
+  <div class="marquee">
+    <div class="marquee__track">
+      <span>Webdesign</span><span>✦</span>
+      <span>Cybersecurity</span><span>✦</span>
+      <span>SEO</span><span>✦</span>
+      <span>Geo-Optimierung</span><span>✦</span>
+      <span>Managed Hosting</span><span>✦</span>
+      <span>Conversion-Design</span><span>✦</span>
+      <span>Webdesign</span><span>✦</span>
+      <span>Cybersecurity</span><span>✦</span>
+      <span>SEO</span><span>✦</span>
+      <span>Geo-Optimierung</span><span>✦</span>
+      <span>Managed Hosting</span><span>✦</span>
+      <span>Conversion-Design</span><span>✦</span>
+    </div>
+  </div>
+
+  <!-- SERVICES -->
+  <section class="services" id="services">
+    <div class="container">
+      <div class="section-header reveal">
+        <span class="section-tag">Was wir machen</span>
+        <h2 class="section-title">Vier Kernbereiche.<br />Eine Anlaufstelle.</h2>
+      </div>
+
+      <div class="services__grid">
+
+        <article class="service-card reveal delay-1" data-index="01">
+          <div class="service-card__icon">
+            <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect x="4" y="8" width="32" height="22" rx="2" stroke="currentColor" stroke-width="1.5"/>
+              <path d="M13 30 L20 36 L27 30" stroke="currentColor" stroke-width="1.5"/>
+              <path d="M10 14h8M10 18h12M10 22h6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <h3>Webdesign</h3>
+          <p>Mobile‑first Websites mit klarer Struktur, die Anfragen generieren – nicht nur gut aussehen.</p>
+          <ul class="service-card__list">
+            <li>Conversion-optimiertes Design</li>
+            <li>Performance & Core Web Vitals</li>
+            <li>Individuelle UX-Konzepte</li>
+          </ul>
+          <div class="service-card__cta">Mehr erfahren →</div>
+        </article>
+
+        <article class="service-card reveal delay-2" data-index="02">
+          <div class="service-card__icon">
+            <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M20 4L6 10v10c0 8.284 5.958 15.902 14 18 8.042-2.098 14-9.716 14-18V10L20 4z" stroke="currentColor" stroke-width="1.5"/>
+              <path d="M14 20l4 4 8-8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <h3>Cybersecurity</h3>
+          <p>Wir bauen Websites und sichern sie ab – HTTPS, Schutz vor Angriffen, laufende Überwachung.</p>
+          <ul class="service-card__list">
+            <li>HTTPS & Security-Setup</li>
+            <li>Schutz vor typischen Angriffen</li>
+            <li>Sicherheits-Audit bestehender Sites</li>
+          </ul>
+          <div class="service-card__cta">Mehr erfahren →</div>
+        </article>
+
+        <article class="service-card reveal delay-3" data-index="03">
+          <div class="service-card__icon">
+            <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="20" cy="20" r="14" stroke="currentColor" stroke-width="1.5"/>
+              <path d="M20 6c0 0-6 6-6 14s6 14 6 14" stroke="currentColor" stroke-width="1.5"/>
+              <path d="M20 6c0 0 6 6 6 14s-6 14-6 14" stroke="currentColor" stroke-width="1.5"/>
+              <path d="M6 20h28" stroke="currentColor" stroke-width="1.5"/>
+              <path d="M8 14h24M8 26h24" stroke="currentColor" stroke-width="1.5" stroke-dasharray="2 2"/>
+            </svg>
+          </div>
+          <h3>SEO & Sichtbarkeit</h3>
+          <p>Technisches SEO integriert von Anfang an – damit Google dich findet, bevor du es weißt.</p>
+          <ul class="service-card__list">
+            <li>On-Page SEO & Struktur</li>
+            <li>Ladezeiten-Optimierung</li>
+            <li>Schema Markup & Meta-Daten</li>
+          </ul>
+          <div class="service-card__cta">Mehr erfahren →</div>
+        </article>
+
+        <article class="service-card reveal delay-1" data-index="04">
+          <div class="service-card__icon">
+            <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M20 6C12 6 6 12 6 20s6 14 14 14 14-6 14-14" stroke="currentColor" stroke-width="1.5"/>
+              <path d="M20 12v8l6 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+              <circle cx="30" cy="12" r="6" fill="#0aff6e" fill-opacity="0.15" stroke="#0aff6e" stroke-width="1.5"/>
+              <path d="M28 12l1.5 1.5L32 10" stroke="#0aff6e" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <h3>Geo-Optimierung</h3>
+          <p>Lokal gefunden werden – Berlin und Umgebung. Wir positionieren dich genau dort, wo deine Kunden suchen.</p>
+          <ul class="service-card__list">
+            <li>Google Business Optimierung</li>
+            <li>Lokale Keyword-Strategie</li>
+            <li>Standort-basierte Sichtbarkeit</li>
+          </ul>
+          <div class="service-card__cta">Mehr erfahren →</div>
+        </article>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- PROCESS / WHY US -->
+  <section class="why" id="about">
+    <div class="container">
+      <div class="why__inner">
+        <div class="why__left reveal">
+          <span class="section-tag">Warum CoreSetup</span>
+          <h2 class="section-title">Kein Agentur-Chaos.<br />Direkter Profi.</h2>
+          <p class="why__desc">
+            Soufian Ramon Kacha – Berlin. Kein Briefing-Ping-Pong, kein Junior-Designer-Roulette. 
+            Du sprichst direkt mit dem Experten, der deine Website baut, sichert und optimiert.
+          </p>
+          <a href="#contact" class="btn btn--primary">Gespräch anfragen</a>
+        </div>
+        <div class="why__right">
+          <div class="why__item reveal delay-1">
+            <span class="why__num">01</span>
+            <div>
+              <h4>Persönlicher Ansprechpartner</h4>
+              <p>Kein Support-Chaos, keine Weiterleitungen. Direkte Kommunikation auf Augenhöhe.</p>
+            </div>
+          </div>
+          <div class="why__item reveal delay-2">
+            <span class="why__num">02</span>
+            <div>
+              <h4>Alles aus einer Hand</h4>
+              <p>Design, Hosting, Security und SEO – gebündelt, abgestimmt, effizient.</p>
+            </div>
+          </div>
+          <div class="why__item reveal delay-3">
+            <span class="why__num">03</span>
+            <div>
+              <h4>Ergebnis-orientiert</h4>
+              <p>Ziel ist nicht eine schöne Website – Ziel ist mehr Anfragen, mehr Umsatz.</p>
+            </div>
+          </div>
+          <div class="why__item reveal delay-1">
+            <span class="why__num">04</span>
+            <div>
+              <h4>Berlin & lokal verwurzelt</h4>
+              <p>Wir kennen den Berliner Markt und optimieren für lokale Sichtbarkeit.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PRICING TEASER -->
+  <section class="pricing" id="pricing">
+    <div class="container">
+      <div class="section-header reveal">
+        <span class="section-tag">Preise</span>
+        <h2 class="section-title">Transparent.<br />Keine Überraschungen.</h2>
+      </div>
+      <div class="pricing__cards">
+        <div class="pricing__card reveal delay-1">
+          <div class="pricing__label">Starter</div>
+          <div class="pricing__price">ab <strong>999 €</strong></div>
+          <ul>
+            <li>✓ 1-Seiter / Landingpage</li>
+            <li>✓ Mobile-first Design</li>
+            <li>✓ Basis-SEO</li>
+            <li>✓ HTTPS-Setup</li>
+          </ul>
+          <a href="#contact" class="btn btn--ghost">Anfragen</a>
+        </div>
+        <div class="pricing__card pricing__card--featured reveal delay-2">
+          <div class="pricing__label">Premium</div>
+          <div class="pricing__badge">Beliebteste Wahl</div>
+          <div class="pricing__price">ab <strong>3.999 €</strong></div>
+          <ul>
+            <li>✓ Multi-Page Website</li>
+            <li>✓ Conversion-Optimierung</li>
+            <li>✓ SEO + Geo-Optimierung</li>
+            <li>✓ Security-Paket</li>
+            <li>✓ Managed Hosting inklusive</li>
+          </ul>
+          <a href="#contact" class="btn btn--primary">Anfragen</a>
+        </div>
+        <div class="pricing__card reveal delay-3">
+          <div class="pricing__label">Hosting & Betreuung</div>
+          <div class="pricing__price"><strong>29–129 €</strong><span>/Monat</span></div>
+          <ul>
+            <li>✓ Managed Hosting</li>
+            <li>✓ Updates & Backups</li>
+            <li>✓ Monitoring</li>
+            <li>✓ Schnelle Änderungen</li>
+          </ul>
+          <a href="#contact" class="btn btn--ghost">Anfragen</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA / CONTACT -->
+  <section class="contact" id="contact">
+    <div class="contact__bg"></div>
+    <div class="container">
+      <div class="contact__inner reveal">
+        <span class="section-tag">Jetzt starten</span>
+        <h2 class="section-title">Bereit für eine Website,<br />die wirklich <em>liefert?</em></h2>
+        <p>Schreib uns – Erstgespräch kostenlos & unverbindlich.</p>
+        <a href="mailto:info@coresetup.studio" class="btn btn--primary btn--large">
+          info@coresetup.studio
+        </a>
+        <p class="contact__sub">oder direkt: <a href="tel:+49">Berlin · coresetup.studio</a></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer__inner">
+        <div class="footer__logo">CORE<span>SETUP</span>.STUDIO</div>
+        <p class="footer__copy">© 2025 CoreSetup Studio · Berlin · Alle Rechte vorbehalten</p>
+        <div class="footer__links">
+          <a href="#">Impressum</a>
+          <a href="#">Datenschutz</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="main.js"></script>
+</body>
+</html>
