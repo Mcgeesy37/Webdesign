@@ -7,16 +7,21 @@
   <link rel="stylesheet" href="styles.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Syne:wght@400;700;800&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,600&family=Bebas+Neue&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet" />
 </head>
 <body>
+
+  <!-- CUSTOM CURSOR -->
+  <div id="cursor"></div>
+  <div id="cursorDot"></div>
 
   <!-- NAV -->
   <nav class="nav" id="nav">
     <div class="nav__logo">CORE<span>SETUP</span>.STUDIO</div>
-    <ul class="nav__links">
+    <ul class="nav__links" id="navLinks">
       <li><a href="#services">Leistungen</a></li>
       <li><a href="#about">Über uns</a></li>
+      <li><a href="#pricing">Preise</a></li>
       <li><a href="#contact" class="nav__cta">Projekt starten</a></li>
     </ul>
     <button class="nav__burger" id="burger" aria-label="Menü">
@@ -24,265 +29,251 @@
     </button>
   </nav>
 
-  <!-- HERO -->
+  <!-- ========== HERO ========== -->
   <section class="hero" id="hero">
-    <div class="hero__grid-bg"></div>
-    <div class="hero__noise"></div>
+    <canvas id="globeCanvas"></canvas>
 
     <div class="hero__content">
-      <p class="hero__tag reveal">Berlin · Premium Digital Studio</p>
-      <h1 class="hero__headline reveal delay-1">
-        Websites,<br />
-        die <em>verkaufen.</em>
+      <div class="hero__eyebrow reveal">
+        <span class="eyebrow__line"></span>
+        <span>Berlin · Digital Excellence Studio</span>
+        <span class="eyebrow__line"></span>
+      </div>
+      <h1 class="hero__headline">
+        <span class="hl hl1 reveal delay-1">WEBSITES</span>
+        <span class="hl hl2 reveal delay-2">DIE <em>VERKAUFEN</em></span>
       </h1>
-      <p class="hero__sub reveal delay-2">
-        Webdesign · Cybersecurity · SEO & Geo‑Optimierung.<br />
-        Kein Agentur-Chaos. Direkter Ansprechpartner.
+      <p class="hero__sub reveal delay-3">
+        Webdesign · Cybersecurity · SEO &amp; Geo‑Optimierung<br/>
+        Direkt. Persönlich. Ergebnisorientiert.
       </p>
-      <div class="hero__actions reveal delay-3">
-        <a href="#contact" class="btn btn--primary">Kostenlos anfragen</a>
-        <a href="#services" class="btn btn--ghost">Leistungen ansehen</a>
+      <div class="hero__ctas reveal delay-4">
+        <a href="#contact" class="btn btn--gold">Kostenlos anfragen</a>
+        <a href="#services" class="btn btn--outline">Leistungen ↓</a>
       </div>
     </div>
 
-    <div class="hero__badge">
-      <svg viewBox="0 0 120 120" class="badge__ring">
-        <path id="circlePath" d="M 60,60 m -45,0 a 45,45 0 1,1 90,0 a 45,45 0 1,1 -90,0" fill="none"/>
-        <text font-size="11.5" fill="currentColor" letter-spacing="3">
-          <textPath href="#circlePath">BERLIN · PREMIUM · DIGITAL · STUDIO · </textPath>
-        </text>
-      </svg>
-      <span class="badge__icon">✦</span>
-    </div>
-
-    <div class="hero__scroll-indicator">
-      <span>Scroll</span>
-      <div class="hero__scroll-line"></div>
-    </div>
-
     <!-- floating stats -->
-    <div class="hero__stat hero__stat--1 reveal delay-2">
-      <span class="stat__num" data-target="48">0</span><span>h</span>
-      <p>Lieferzeit Erstkonzept</p>
+    <div class="fstat fstat--l reveal delay-3">
+      <div class="fstat__val"><span class="count" data-target="150">0</span>+</div>
+      <div class="fstat__lbl">Projekte</div>
     </div>
-    <div class="hero__stat hero__stat--2 reveal delay-3">
-      <span class="stat__num" data-target="100">0</span><span>%</span>
-      <p>Performance-First</p>
+    <div class="fstat fstat--r reveal delay-4">
+      <div class="fstat__val"><span class="count" data-target="48">0</span>h</div>
+      <div class="fstat__lbl">Erstkonzept</div>
+    </div>
+
+    <div class="hero__scroll">
+      <span>Scroll</span>
+      <div class="scroll-line"></div>
     </div>
   </section>
 
   <!-- MARQUEE -->
-  <div class="marquee">
-    <div class="marquee__track">
-      <span>Webdesign</span><span>✦</span>
-      <span>Cybersecurity</span><span>✦</span>
-      <span>SEO</span><span>✦</span>
-      <span>Geo-Optimierung</span><span>✦</span>
-      <span>Managed Hosting</span><span>✦</span>
-      <span>Conversion-Design</span><span>✦</span>
-      <span>Webdesign</span><span>✦</span>
-      <span>Cybersecurity</span><span>✦</span>
-      <span>SEO</span><span>✦</span>
-      <span>Geo-Optimierung</span><span>✦</span>
-      <span>Managed Hosting</span><span>✦</span>
-      <span>Conversion-Design</span><span>✦</span>
+  <div class="marquee" aria-hidden="true">
+    <div class="marquee__inner">
+      <span>Webdesign</span><b>✦</b>
+      <span>Cybersecurity</span><b>✦</b>
+      <span>SEO</span><b>✦</b>
+      <span>Geo-Optimierung</span><b>✦</b>
+      <span>Managed Hosting</span><b>✦</b>
+      <span>Conversion</span><b>✦</b>
+      <span>Webdesign</span><b>✦</b>
+      <span>Cybersecurity</span><b>✦</b>
+      <span>SEO</span><b>✦</b>
+      <span>Geo-Optimierung</span><b>✦</b>
+      <span>Managed Hosting</span><b>✦</b>
+      <span>Conversion</span><b>✦</b>
     </div>
   </div>
 
-  <!-- SERVICES -->
+  <!-- ========== SERVICES ========== -->
   <section class="services" id="services">
     <div class="container">
-      <div class="section-header reveal">
-        <span class="section-tag">Was wir machen</span>
-        <h2 class="section-title">Vier Kernbereiche.<br />Eine Anlaufstelle.</h2>
+      <div class="section-hdr">
+        <div class="section-tag reveal">Was wir machen</div>
+        <h2 class="section-title reveal delay-1">Vier Kernbereiche.<br/>Eine Anlaufstelle.</h2>
       </div>
-
       <div class="services__grid">
 
-        <article class="service-card reveal delay-1" data-index="01">
-          <div class="service-card__icon">
-            <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <rect x="4" y="8" width="32" height="22" rx="2" stroke="currentColor" stroke-width="1.5"/>
-              <path d="M13 30 L20 36 L27 30" stroke="currentColor" stroke-width="1.5"/>
-              <path d="M10 14h8M10 18h12M10 22h6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+        <article class="scard reveal delay-1" data-n="01">
+          <div class="scard__glow"></div>
+          <div class="scard__ico">
+            <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.4">
+              <rect x="4" y="8" width="40" height="28" rx="3"/>
+              <path d="M17 36l7 7 7-7"/>
+              <path d="M12 17h10M12 22h16M12 27h8" stroke-linecap="round"/>
             </svg>
           </div>
           <h3>Webdesign</h3>
-          <p>Mobile‑first Websites mit klarer Struktur, die Anfragen generieren – nicht nur gut aussehen.</p>
-          <ul class="service-card__list">
+          <p>Mobile‑first Websites mit klarer Struktur, die Anfragen generieren.</p>
+          <ul>
             <li>Conversion-optimiertes Design</li>
-            <li>Performance & Core Web Vitals</li>
+            <li>Performance &amp; Core Web Vitals</li>
             <li>Individuelle UX-Konzepte</li>
           </ul>
-          <div class="service-card__cta">Mehr erfahren →</div>
+          <div class="scard__link">Mehr erfahren →</div>
         </article>
 
-        <article class="service-card reveal delay-2" data-index="02">
-          <div class="service-card__icon">
-            <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M20 4L6 10v10c0 8.284 5.958 15.902 14 18 8.042-2.098 14-9.716 14-18V10L20 4z" stroke="currentColor" stroke-width="1.5"/>
-              <path d="M14 20l4 4 8-8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        <article class="scard reveal delay-2" data-n="02">
+          <div class="scard__glow"></div>
+          <div class="scard__ico">
+            <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.4">
+              <path d="M24 4L8 11v13c0 10.5 6.9 19.9 16 22 9.1-2.1 16-11.5 16-22V11L24 4z"/>
+              <path d="M17 24l5 5 9-10" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
           </div>
           <h3>Cybersecurity</h3>
-          <p>Wir bauen Websites und sichern sie ab – HTTPS, Schutz vor Angriffen, laufende Überwachung.</p>
-          <ul class="service-card__list">
-            <li>HTTPS & Security-Setup</li>
+          <p>Websites bauen und absichern. HTTPS, Angriffsschutz, laufende Überwachung.</p>
+          <ul>
+            <li>HTTPS &amp; Security-Setup</li>
             <li>Schutz vor typischen Angriffen</li>
             <li>Sicherheits-Audit bestehender Sites</li>
           </ul>
-          <div class="service-card__cta">Mehr erfahren →</div>
+          <div class="scard__link">Mehr erfahren →</div>
         </article>
 
-        <article class="service-card reveal delay-3" data-index="03">
-          <div class="service-card__icon">
-            <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <circle cx="20" cy="20" r="14" stroke="currentColor" stroke-width="1.5"/>
-              <path d="M20 6c0 0-6 6-6 14s6 14 6 14" stroke="currentColor" stroke-width="1.5"/>
-              <path d="M20 6c0 0 6 6 6 14s-6 14-6 14" stroke="currentColor" stroke-width="1.5"/>
-              <path d="M6 20h28" stroke="currentColor" stroke-width="1.5"/>
-              <path d="M8 14h24M8 26h24" stroke="currentColor" stroke-width="1.5" stroke-dasharray="2 2"/>
+        <article class="scard reveal delay-3" data-n="03">
+          <div class="scard__glow"></div>
+          <div class="scard__ico">
+            <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.4">
+              <circle cx="24" cy="24" r="18"/>
+              <path d="M24 6c0 0-8 8-8 18s8 18 8 18M24 6c0 0 8 8 8 18s-8 18-8 18"/>
+              <path d="M6 24h36M9 15h30M9 33h30" stroke-dasharray="3 3"/>
             </svg>
           </div>
-          <h3>SEO & Sichtbarkeit</h3>
-          <p>Technisches SEO integriert von Anfang an – damit Google dich findet, bevor du es weißt.</p>
-          <ul class="service-card__list">
-            <li>On-Page SEO & Struktur</li>
+          <h3>SEO &amp; Sichtbarkeit</h3>
+          <p>Technisches SEO integriert von Anfang an – Google findet dich.</p>
+          <ul>
+            <li>On-Page SEO &amp; Struktur</li>
             <li>Ladezeiten-Optimierung</li>
-            <li>Schema Markup & Meta-Daten</li>
+            <li>Schema Markup &amp; Meta-Daten</li>
           </ul>
-          <div class="service-card__cta">Mehr erfahren →</div>
+          <div class="scard__link">Mehr erfahren →</div>
         </article>
 
-        <article class="service-card reveal delay-1" data-index="04">
-          <div class="service-card__icon">
-            <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M20 6C12 6 6 12 6 20s6 14 14 14 14-6 14-14" stroke="currentColor" stroke-width="1.5"/>
-              <path d="M20 12v8l6 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-              <circle cx="30" cy="12" r="6" fill="#0aff6e" fill-opacity="0.15" stroke="#0aff6e" stroke-width="1.5"/>
-              <path d="M28 12l1.5 1.5L32 10" stroke="#0aff6e" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        <article class="scard reveal delay-1" data-n="04">
+          <div class="scard__glow"></div>
+          <div class="scard__ico">
+            <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.4">
+              <path d="M24 6C14.1 6 6 14.1 6 24s8.1 18 18 18 18-8.1 18-18"/>
+              <path d="M24 14v10l7 4" stroke-linecap="round"/>
+              <circle cx="38" cy="13" r="7"/>
+              <path d="M35 13l2 2 4-4" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
           </div>
           <h3>Geo-Optimierung</h3>
-          <p>Lokal gefunden werden – Berlin und Umgebung. Wir positionieren dich genau dort, wo deine Kunden suchen.</p>
-          <ul class="service-card__list">
+          <p>Lokal gefunden werden – Berlin &amp; Umgebung. Genau dort, wo Kunden suchen.</p>
+          <ul>
             <li>Google Business Optimierung</li>
             <li>Lokale Keyword-Strategie</li>
             <li>Standort-basierte Sichtbarkeit</li>
           </ul>
-          <div class="service-card__cta">Mehr erfahren →</div>
+          <div class="scard__link">Mehr erfahren →</div>
         </article>
 
       </div>
     </div>
   </section>
 
-  <!-- PROCESS / WHY US -->
+  <!-- ========== WHY ========== -->
   <section class="why" id="about">
     <div class="container">
-      <div class="why__inner">
-        <div class="why__left reveal">
-          <span class="section-tag">Warum CoreSetup</span>
-          <h2 class="section-title">Kein Agentur-Chaos.<br />Direkter Profi.</h2>
-          <p class="why__desc">
-            Soufian Ramon Kacha – Berlin. Kein Briefing-Ping-Pong, kein Junior-Designer-Roulette. 
+      <div class="why__wrap">
+        <div class="why__left">
+          <div class="section-tag reveal">Warum CoreSetup</div>
+          <h2 class="section-title reveal delay-1">Kein Agentur‑Chaos.<br/>Direkter Profi.</h2>
+          <p class="why__desc reveal delay-2">
+            Soufian Ramon Kacha – Berlin. Kein Briefing-Ping-Pong.
             Du sprichst direkt mit dem Experten, der deine Website baut, sichert und optimiert.
           </p>
-          <a href="#contact" class="btn btn--primary">Gespräch anfragen</a>
+          <a href="#contact" class="btn btn--gold reveal delay-3">Gespräch anfragen</a>
         </div>
         <div class="why__right">
           <div class="why__item reveal delay-1">
-            <span class="why__num">01</span>
-            <div>
-              <h4>Persönlicher Ansprechpartner</h4>
-              <p>Kein Support-Chaos, keine Weiterleitungen. Direkte Kommunikation auf Augenhöhe.</p>
-            </div>
+            <div class="why__num">01</div>
+            <div><h4>Persönlicher Ansprechpartner</h4><p>Kein Support-Chaos. Direkte Kommunikation auf Augenhöhe.</p></div>
           </div>
           <div class="why__item reveal delay-2">
-            <span class="why__num">02</span>
-            <div>
-              <h4>Alles aus einer Hand</h4>
-              <p>Design, Hosting, Security und SEO – gebündelt, abgestimmt, effizient.</p>
-            </div>
+            <div class="why__num">02</div>
+            <div><h4>Alles aus einer Hand</h4><p>Design, Hosting, Security und SEO – gebündelt, abgestimmt, effizient.</p></div>
           </div>
           <div class="why__item reveal delay-3">
-            <span class="why__num">03</span>
-            <div>
-              <h4>Ergebnis-orientiert</h4>
-              <p>Ziel ist nicht eine schöne Website – Ziel ist mehr Anfragen, mehr Umsatz.</p>
-            </div>
+            <div class="why__num">03</div>
+            <div><h4>Ergebnis-orientiert</h4><p>Nicht nur eine schöne Website – mehr Anfragen, mehr Umsatz.</p></div>
           </div>
           <div class="why__item reveal delay-1">
-            <span class="why__num">04</span>
-            <div>
-              <h4>Berlin & lokal verwurzelt</h4>
-              <p>Wir kennen den Berliner Markt und optimieren für lokale Sichtbarkeit.</p>
-            </div>
+            <div class="why__num">04</div>
+            <div><h4>Berlin &amp; lokal verwurzelt</h4><p>Wir kennen den Berliner Markt und optimieren für lokale Sichtbarkeit.</p></div>
           </div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- PRICING TEASER -->
+  <!-- ========== PRICING ========== -->
   <section class="pricing" id="pricing">
     <div class="container">
-      <div class="section-header reveal">
-        <span class="section-tag">Preise</span>
-        <h2 class="section-title">Transparent.<br />Keine Überraschungen.</h2>
+      <div class="section-hdr">
+        <div class="section-tag reveal">Preise</div>
+        <h2 class="section-title reveal delay-1">Transparent.<br/>Keine Überraschungen.</h2>
       </div>
-      <div class="pricing__cards">
-        <div class="pricing__card reveal delay-1">
-          <div class="pricing__label">Starter</div>
-          <div class="pricing__price">ab <strong>999 €</strong></div>
+      <div class="pricing__row">
+
+        <div class="pcard reveal delay-1">
+          <div class="pcard__tag">Starter</div>
+          <div class="pcard__price">ab <b>999 €</b></div>
           <ul>
-            <li>✓ 1-Seiter / Landingpage</li>
-            <li>✓ Mobile-first Design</li>
-            <li>✓ Basis-SEO</li>
-            <li>✓ HTTPS-Setup</li>
+            <li>✦ 1-Seiter / Landingpage</li>
+            <li>✦ Mobile-first Design</li>
+            <li>✦ Basis-SEO</li>
+            <li>✦ HTTPS-Setup</li>
           </ul>
-          <a href="#contact" class="btn btn--ghost">Anfragen</a>
+          <a href="#contact" class="btn btn--outline">Anfragen</a>
         </div>
-        <div class="pricing__card pricing__card--featured reveal delay-2">
-          <div class="pricing__label">Premium</div>
-          <div class="pricing__badge">Beliebteste Wahl</div>
-          <div class="pricing__price">ab <strong>3.999 €</strong></div>
+
+        <div class="pcard pcard--featured reveal delay-2">
+          <div class="pcard__ribbon">Beliebteste Wahl</div>
+          <div class="pcard__tag">Premium</div>
+          <div class="pcard__price">ab <b>3.999 €</b></div>
           <ul>
-            <li>✓ Multi-Page Website</li>
-            <li>✓ Conversion-Optimierung</li>
-            <li>✓ SEO + Geo-Optimierung</li>
-            <li>✓ Security-Paket</li>
-            <li>✓ Managed Hosting inklusive</li>
+            <li>✦ Multi-Page Website</li>
+            <li>✦ Conversion-Optimierung</li>
+            <li>✦ SEO + Geo-Optimierung</li>
+            <li>✦ Security-Paket</li>
+            <li>✦ Managed Hosting inkl.</li>
           </ul>
-          <a href="#contact" class="btn btn--primary">Anfragen</a>
+          <a href="#contact" class="btn btn--gold">Anfragen</a>
         </div>
-        <div class="pricing__card reveal delay-3">
-          <div class="pricing__label">Hosting & Betreuung</div>
-          <div class="pricing__price"><strong>29–129 €</strong><span>/Monat</span></div>
+
+        <div class="pcard reveal delay-3">
+          <div class="pcard__tag">Hosting & Betreuung</div>
+          <div class="pcard__price"><b>29–129 €</b><small>/Monat</small></div>
           <ul>
-            <li>✓ Managed Hosting</li>
-            <li>✓ Updates & Backups</li>
-            <li>✓ Monitoring</li>
-            <li>✓ Schnelle Änderungen</li>
+            <li>✦ Managed Hosting</li>
+            <li>✦ Updates &amp; Backups</li>
+            <li>✦ Monitoring</li>
+            <li>✦ Schnelle Änderungen</li>
           </ul>
-          <a href="#contact" class="btn btn--ghost">Anfragen</a>
+          <a href="#contact" class="btn btn--outline">Anfragen</a>
         </div>
+
       </div>
     </div>
   </section>
 
-  <!-- CTA / CONTACT -->
+  <!-- ========== CONTACT ========== -->
   <section class="contact" id="contact">
-    <div class="contact__bg"></div>
+    <canvas id="contactGlobe"></canvas>
     <div class="container">
-      <div class="contact__inner reveal">
-        <span class="section-tag">Jetzt starten</span>
-        <h2 class="section-title">Bereit für eine Website,<br />die wirklich <em>liefert?</em></h2>
-        <p>Schreib uns – Erstgespräch kostenlos & unverbindlich.</p>
-        <a href="mailto:info@coresetup.studio" class="btn btn--primary btn--large">
+      <div class="contact__box reveal">
+        <div class="section-tag">Jetzt starten</div>
+        <h2 class="section-title">Bereit für eine Website,<br/>die wirklich <em>liefert?</em></h2>
+        <p>Erstgespräch kostenlos &amp; unverbindlich. Direkt mit dem Experten.</p>
+        <a href="mailto:info@coresetup.studio" class="btn btn--gold btn--lg">
           info@coresetup.studio
         </a>
-        <p class="contact__sub">oder direkt: <a href="tel:+49">Berlin · coresetup.studio</a></p>
+        <p class="contact__foot">Berlin · <a href="#">coresetup.studio</a></p>
       </div>
     </div>
   </section>
@@ -290,9 +281,9 @@
   <!-- FOOTER -->
   <footer class="footer">
     <div class="container">
-      <div class="footer__inner">
+      <div class="footer__row">
         <div class="footer__logo">CORE<span>SETUP</span>.STUDIO</div>
-        <p class="footer__copy">© 2025 CoreSetup Studio · Berlin · Alle Rechte vorbehalten</p>
+        <p>© 2025 CoreSetup Studio · Berlin · Alle Rechte vorbehalten</p>
         <div class="footer__links">
           <a href="#">Impressum</a>
           <a href="#">Datenschutz</a>
@@ -301,6 +292,7 @@
     </div>
   </footer>
 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
   <script src="main.js"></script>
 </body>
 </html>
