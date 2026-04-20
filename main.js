@@ -1,58 +1,58 @@
-/* =============================================
+/* ════════════════════════════════════════════
    CoreSetup Studio — main.js
-   Epic Three.js Globe · Gold · Black · Luxury
-============================================= */
+   One Globe. Gold. Sharp.
+════════════════════════════════════════════ */
 
-/* ─── CUSTOM CURSOR ─────────────────────────── */
-(function () {
-  const cur = document.getElementById('cursor');
-  const dot = document.getElementById('cursorDot');
-  let mx = 0, my = 0, cx = 0, cy = 0;
-
-  document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
-
-  function animCursor() {
-    cx += (mx - cx) * 0.12;
-    cy += (my - cy) * 0.12;
-    if (cur) { cur.style.left = cx + 'px'; cur.style.top = cy + 'px'; }
-    if (dot) { dot.style.left = mx + 'px'; dot.style.top = my + 'px'; }
-    requestAnimationFrame(animCursor);
-  }
-  animCursor();
-})();
-
-/* ─── NAV ────────────────────────────────────── */
-const nav = document.getElementById('nav');
+/* ──────────────────────────────────────────
+   NAV
+────────────────────────────────────────── */
+const nav    = document.getElementById('nav');
 const burger = document.getElementById('burger');
-window.addEventListener('scroll', () => nav.classList.toggle('scrolled', scrollY > 50));
-burger.addEventListener('click', () => nav.classList.toggle('open'));
-document.querySelectorAll('.nav__links a').forEach(a => a.addEventListener('click', () => nav.classList.remove('open')));
 
-/* ─── SCROLL REVEAL ──────────────────────────── */
-const revealObs = new IntersectionObserver(entries => {
-  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); revealObs.unobserve(e.target); } });
-}, { threshold: 0.1 });
-document.querySelectorAll('.reveal').forEach(el => revealObs.observe(el));
+window.addEventListener('scroll', () => {
+  nav.classList.toggle('stuck', window.scrollY > 60);
+});
 
-/* ─── COUNT UP ───────────────────────────────── */
-const countObs = new IntersectionObserver(entries => {
+burger.addEventListener('click', () => {
+  nav.classList.toggle('open');
+});
+
+document.querySelectorAll('.nav-links a').forEach(a => {
+  a.addEventListener('click', () => nav.classList.remove('open'));
+});
+
+/* ──────────────────────────────────────────
+   SCROLL REVEAL
+────────────────────────────────────────── */
+const ro = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) { e.target.classList.add('in'); ro.unobserve(e.target); }
+  });
+}, { threshold: 0.12 });
+document.querySelectorAll('.reveal').forEach(el => ro.observe(el));
+
+/* ──────────────────────────────────────────
+   COUNT UP ANIMATION
+────────────────────────────────────────── */
+const co = new IntersectionObserver(entries => {
   entries.forEach(e => {
     if (!e.isIntersecting) return;
-    const el = e.target;
-    const target = +el.dataset.target;
-    let cur = 0;
-    const step = Math.max(1, Math.floor(target / 60));
-    const t = setInterval(() => {
-      cur = Math.min(cur + step, target);
-      el.textContent = cur;
-      if (cur >= target) clearInterval(t);
-    }, 24);
-    countObs.unobserve(el);
+    const el = e.target, target = +el.dataset.to;
+    let val = 0;
+    const step = Math.max(1, Math.ceil(target / 55));
+    const timer = setInterval(() => {
+      val = Math.min(val + step, target);
+      el.textContent = val;
+      if (val >= target) clearInterval(timer);
+    }, 22);
+    co.unobserve(el);
   });
-}, { threshold: 0.6 });
-document.querySelectorAll('.count').forEach(el => countObs.observe(el));
+}, { threshold: 0.7 });
+document.querySelectorAll('.hstat-n').forEach(el => co.observe(el));
 
-/* ─── SMOOTH ANCHOR ──────────────────────────── */
+/* ──────────────────────────────────────────
+   SMOOTH ANCHOR
+────────────────────────────────────────── */
 document.querySelectorAll('a[href^="#"]').forEach(a => {
   a.addEventListener('click', e => {
     const t = document.querySelector(a.getAttribute('href'));
@@ -60,158 +60,251 @@ document.querySelectorAll('a[href^="#"]').forEach(a => {
   });
 });
 
-/* =============================================
-   THREE.JS GLOBE — HERO
-============================================= */
-(function initHeroGlobe() {
-  if (typeof THREE === 'undefined') return;
+/* ──────────────────────────────────────────
+   CONTACT FORM
+────────────────────────────────────────── */
+function handleForm(e) {
+  e.preventDefault();
+  const msg = document.getElementById('formMsg');
+  msg.style.display = 'block';
+  msg.textContent = '✦ Nachricht gesendet! Wir melden uns innerhalb von 24 Stunden.';
+  e.target.reset();
+}
+
+/* ──────────────────────────────────────────
+   CARD TILT
+────────────────────────────────────────── */
+document.querySelectorAll('.card, .pcard, .hfeature').forEach(card => {
+  card.addEventListener('mousemove', e => {
+    const r = card.getBoundingClientRect();
+    const x = ((e.clientX - r.left)  / r.width  - .5) * 8;
+    const y = ((e.clientY - r.top)   / r.height - .5) * 8;
+    card.style.transform = `perspective(800px) rotateY(${x}deg) rotateX(${-y}deg)`;
+  });
+  card.addEventListener('mouseleave', () => { card.style.transform = ''; });
+});
+
+/* ════════════════════════════════════════════
+   THREE.JS GLOBE  — single, clean, detailed
+════════════════════════════════════════════ */
+(function buildGlobe() {
+
+  if (typeof THREE === 'undefined') {
+    console.warn('Three.js not loaded');
+    return;
+  }
 
   const canvas = document.getElementById('globeCanvas');
-  const hero = document.getElementById('hero');
-  if (!canvas || !hero) return;
+  if (!canvas) return;
 
-  /* — Renderer — */
+  /* ── Renderer ── */
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
-  renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
-  renderer.setSize(canvas.offsetWidth, canvas.offsetHeight);
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
   renderer.setClearColor(0x000000, 0);
-  renderer.shadowMap.enabled = true;
 
-  /* — Scene / Camera — */
-  const scene = new THREE.Scene();
-  const camera = new THREE.PerspectiveCamera(45, canvas.offsetWidth / canvas.offsetHeight, 0.1, 1000);
-  camera.position.set(0, 0, 3.6);
+  /* ── Scene & Camera ── */
+  const scene  = new THREE.Scene();
+  const W = canvas.parentElement.offsetWidth;
+  const H = canvas.parentElement.offsetHeight;
+  const camera = new THREE.PerspectiveCamera(42, W / H, 0.1, 200);
+  camera.position.set(0, 0, 3.8);
 
-  /* — Colors — */
-  const GOLD     = 0xd4af37;
-  const GOLD2    = 0xf0d060;
-  const GOLD_DIM = 0x6b5810;
-  const BLACK    = 0x05060a;
+  function resize() {
+    const w = canvas.parentElement.offsetWidth;
+    const h = canvas.parentElement.offsetHeight;
+    renderer.setSize(w, h);
+    camera.aspect = w / h;
+    camera.updateProjectionMatrix();
+  }
+  resize();
+  window.addEventListener('resize', resize);
 
-  /* ── Globe sphere ── */
-  const globeGeo = new THREE.SphereGeometry(1, 96, 96);
+  /* ────────────────────────────────────────
+     GLOBE SHADER — detailed continents,
+     ocean depth, gold grid, atmosphere
+  ──────────────────────────────────────── */
+  const globeVS = `
+    varying vec3 vNormal;
+    varying vec3 vWorldPos;
+    varying vec2 vUv;
+    void main() {
+      vNormal   = normalize(normalMatrix * normal);
+      vWorldPos = (modelMatrix * vec4(position, 1.0)).xyz;
+      vUv       = uv;
+      gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+    }
+  `;
 
-  // Custom shader material for the globe — dark with gold atmospheric glow
+  const globeFS = `
+    precision highp float;
+    uniform float uTime;
+    varying vec3 vNormal;
+    varying vec3 vWorldPos;
+    varying vec2 vUv;
+
+    /* ─ noise helpers ─ */
+    float hash(vec2 p) {
+      p = fract(p * vec2(123.34, 456.21));
+      p += dot(p, p + 45.32);
+      return fract(p.x * p.y);
+    }
+    float noise(vec2 p) {
+      vec2 i = floor(p), f = fract(p);
+      vec2 u = f * f * (3.0 - 2.0 * f);
+      return mix(mix(hash(i),           hash(i+vec2(1,0)), u.x),
+                 mix(hash(i+vec2(0,1)), hash(i+vec2(1,1)), u.x), u.y);
+    }
+    float fbm(vec2 p) {
+      float v = 0.0, a = 0.5;
+      for (int i = 0; i < 5; i++) {
+        v += a * noise(p);
+        p *= 2.1;
+        a *= 0.5;
+      }
+      return v;
+    }
+
+    /* ─ continent mask ─
+       Accurate-ish land/ocean distribution using
+       layered fbm on a lon/lat projection        */
+    float continentMask(vec2 uv) {
+      float lon = uv.x * 6.2832 - 3.1416;  // -π … π
+      float lat = (uv.y - 0.5) * 3.1416;   // -π/2 … π/2
+
+      /* Convert to spherical x,y for noise sampling */
+      float clat = cos(lat);
+      vec2  sp   = vec2(clat * cos(lon), clat * sin(lon));
+
+      /* Base continent shapes */
+      float land = 0.0;
+
+      /* Africa + Europe */
+      float af = smoothstep(-0.05, 0.35,
+        fbm(sp * 2.8 + vec2(1.2, 0.3)) - 0.28
+      );
+      land += af * 0.9;
+
+      /* Americas */
+      float am = smoothstep(-0.05, 0.35,
+        fbm(sp * 2.5 + vec2(-2.1, 0.1)) - 0.30
+      );
+      land += am * 0.85;
+
+      /* Asia */
+      float as = smoothstep(-0.05, 0.40,
+        fbm(sp * 2.6 + vec2(2.5, 0.5)) - 0.27
+      );
+      land += as * 0.95;
+
+      /* Australia */
+      float au = smoothstep(-0.05, 0.30,
+        fbm(sp * 4.0 + vec2(2.8, -1.1)) - 0.36
+      );
+      land += au * 0.7;
+
+      /* Polar ice caps */
+      float pole = smoothstep(0.58, 0.95, abs(uv.y - 0.5) * 2.0);
+      land += pole * 0.5;
+
+      return clamp(land, 0.0, 1.0);
+    }
+
+    /* ─ coast line sharpness ─ */
+    float coast(vec2 uv) {
+      float c  = continentMask(uv);
+      float eps = 0.003;
+      float cx = continentMask(uv + vec2(eps, 0.0));
+      float cy = continentMask(uv + vec2(0.0, eps));
+      float grad = length(vec2(cx - c, cy - c)) / eps;
+      return clamp(grad * 0.18, 0.0, 1.0);
+    }
+
+    void main() {
+      vec2 uv = vUv;
+
+      /* ── land / ocean ── */
+      float land   = continentMask(uv);
+      float coasts = coast(uv);
+
+      vec3 deepOcean  = vec3(0.02, 0.04, 0.09);
+      vec3 shallowOcean = vec3(0.05, 0.08, 0.14);
+      vec3 landDark   = vec3(0.09, 0.08, 0.05);
+      vec3 landMid    = vec3(0.14, 0.12, 0.07);
+      vec3 landHigh   = vec3(0.20, 0.17, 0.09);
+
+      /* ocean depth variation */
+      float oceanVar = fbm(uv * 6.0) * 0.5 + 0.5;
+      vec3  oceanCol = mix(deepOcean, shallowOcean, oceanVar * land + oceanVar * 0.3);
+
+      /* land elevation variation */
+      float elev     = fbm(uv * 9.0 + vec2(3.0));
+      vec3  landCol  = mix(landDark, mix(landMid, landHigh, elev), land);
+      landCol        = mix(landCol, vec3(0.85, 0.82, 0.70) * 0.7, coast(uv) * 0.5);
+
+      vec3 baseCol = mix(oceanCol, landCol, step(0.45, land));
+
+      /* ── gold lat/lon grid ── */
+      float lonF = mod(uv.x * 36.0, 1.0);   /* every 10° */
+      float latF = mod(uv.y * 18.0, 1.0);   /* every 10° */
+      float lw   = 0.025;
+      float grd  = max(step(1.0 - lw, lonF), step(1.0 - lw, latF));
+      /* Major lines every 30° slightly brighter */
+      float lonM = mod(uv.x * 12.0, 1.0);
+      float latM = mod(uv.y * 6.0,  1.0);
+      float grdM = max(step(1.0 - lw * 1.6, lonM), step(1.0 - lw * 1.6, latM));
+      float finalGrid = max(grd * 0.12, grdM * 0.22);
+
+      baseCol += vec3(0.83, 0.69, 0.21) * finalGrid * (0.4 + 0.6 * (1.0 - land));
+
+      /* ── animated scan pulse ── */
+      float pulse = sin(uv.y * 120.0 - uTime * 0.6) * 0.5 + 0.5;
+      baseCol += vec3(0.83, 0.69, 0.21) * pulse * 0.018 * (1.0 - land);
+
+      /* ── specular highlight (key light from upper-left) ── */
+      vec3 lightDir = normalize(vec3(1.4, 1.6, 2.0));
+      float diff    = max(dot(vNormal, lightDir), 0.0);
+      float spec    = pow(diff, 28.0);
+      baseCol      += vec3(0.70, 0.58, 0.22) * spec * 0.45;
+      /* soft fill light */
+      vec3 fillDir = normalize(vec3(-1.0, -0.5, 0.8));
+      baseCol += vec3(0.05, 0.07, 0.12) * max(dot(vNormal, fillDir), 0.0) * 0.3;
+
+      /* ── rim / atmosphere glow ── */
+      vec3  viewDir = normalize(cameraPosition - vWorldPos);
+      float rim     = 1.0 - max(dot(vNormal, viewDir), 0.0);
+      rim           = pow(rim, 2.8);
+      vec3  atmo    = vec3(0.83, 0.69, 0.21) * rim * 0.55;
+      baseCol += atmo;
+
+      float alpha = 0.88 + rim * 0.12;
+      gl_FragColor = vec4(baseCol, alpha);
+    }
+  `;
+
+  const globeGeo = new THREE.SphereGeometry(1.0, 128, 128);
   const globeMat = new THREE.ShaderMaterial({
-    uniforms: {
-      uTime:      { value: 0 },
-      uGlowColor: { value: new THREE.Color(GOLD) },
-    },
-    vertexShader: `
-      varying vec3 vNormal;
-      varying vec3 vPos;
-      varying vec2 vUv;
-      void main(){
-        vNormal = normalize(normalMatrix * normal);
-        vPos    = (modelMatrix * vec4(position,1.0)).xyz;
-        vUv     = uv;
-        gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.0);
-      }
-    `,
-    fragmentShader: `
-      uniform float uTime;
-      uniform vec3  uGlowColor;
-      varying vec3  vNormal;
-      varying vec3  vPos;
-      varying vec2  vUv;
-
-      // simple hash
-      float hash(vec2 p){ return fract(sin(dot(p, vec2(127.1,311.7)))*43758.5); }
-
-      // continent approximation using noise fields
-      float continents(vec2 uv){
-        float lon = uv.x * 6.2832;
-        float lat = (uv.y - 0.5) * 3.1416;
-        vec2 p = vec2(cos(lat)*cos(lon), cos(lat)*sin(lon));
-
-        // sculpt major land masses with layered sine/cos patterns
-        float land = 0.0;
-
-        // Europe / Africa band
-        land += smoothstep(0.22, 0.55, sin(lon*1.8 + 0.4) * cos(lat*2.1 + 0.3));
-        // Americas
-        land += smoothstep(0.18, 0.52, sin(lon*1.5 - 1.9) * cos(lat*1.7 + 0.1) * 0.9);
-        // Asia / Australia
-        land += smoothstep(0.20, 0.58, sin(lon*2.1 + 1.6) * cos(lat*1.4 - 0.2));
-        // polar caps
-        float polar = smoothstep(0.6, 0.95, abs(uv.y - 0.5) * 2.0);
-        land += polar * 0.5;
-
-        return clamp(land, 0.0, 1.0);
-      }
-
-      // grid lines
-      float gridLines(vec2 uv){
-        float lon = mod(uv.x * 24.0, 1.0);
-        float lat = mod(uv.y * 12.0, 1.0);
-        float lw  = 0.03;
-        float g   = step(1.0 - lw, lon) + step(1.0 - lw, lat);
-        return clamp(g, 0.0, 1.0);
-      }
-
-      void main(){
-        vec2 uv = vUv;
-
-        // atmosphere rim glow
-        vec3 viewDir = normalize(cameraPosition - vPos);
-        float rim = 1.0 - max(dot(vNormal, viewDir), 0.0);
-        rim = pow(rim, 3.0);
-        vec3 atmo = uGlowColor * rim * 0.7;
-
-        // continent mask
-        float land = continents(uv);
-        vec3  oceanCol  = vec3(0.03, 0.035, 0.06);
-        vec3  landCol   = vec3(0.10, 0.09, 0.06);
-        vec3  base = mix(oceanCol, landCol, land);
-
-        // gold grid overlay
-        float grid = gridLines(uv) * 0.12;
-        base += uGlowColor * grid * (1.0 - land * 0.6);
-
-        // subtle animated scan line
-        float scan = sin(uv.y * 180.0 + uTime * 0.4) * 0.5 + 0.5;
-        base += uGlowColor * scan * 0.015;
-
-        // specular highlight (top-left)
-        float spec = pow(max(dot(vNormal, normalize(vec3(1.0,1.2,1.5))), 0.0), 32.0);
-        base += vec3(0.6, 0.5, 0.2) * spec * 0.35;
-
-        // combine
-        vec3 col = base + atmo;
-        float alpha = 0.92 + rim * 0.08;
-
-        gl_FragColor = vec4(col, alpha);
-      }
-    `,
+    vertexShader:   globeVS,
+    fragmentShader: globeFS,
+    uniforms: { uTime: { value: 0 } },
     transparent: true,
-    side: THREE.FrontSide,
   });
-
   const globe = new THREE.Mesh(globeGeo, globeMat);
   scene.add(globe);
 
-  /* ── Atmosphere outer glow ── */
-  const atmoGeo = new THREE.SphereGeometry(1.08, 64, 64);
+  /* ── Atmosphere outer shell ── */
+  const atmoGeo = new THREE.SphereGeometry(1.10, 64, 64);
   const atmoMat = new THREE.ShaderMaterial({
-    uniforms: { uColor: { value: new THREE.Color(GOLD) } },
+    uniforms: {},
     vertexShader: `
-      varying vec3 vNormal;
-      varying vec3 vPos;
-      void main(){
-        vNormal = normalize(normalMatrix * normal);
-        vPos = (modelMatrix * vec4(position,1.0)).xyz;
-        gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.0);
-      }
+      varying vec3 vN; varying vec3 vP;
+      void main(){ vN=normalize(normalMatrix*normal); vP=(modelMatrix*vec4(position,1.)).xyz; gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.); }
     `,
     fragmentShader: `
-      uniform vec3 uColor;
-      varying vec3 vNormal;
-      varying vec3 vPos;
+      varying vec3 vN; varying vec3 vP;
       void main(){
-        vec3 viewDir = normalize(cameraPosition - vPos);
-        float rim = 1.0 - dot(vNormal, viewDir);
-        rim = pow(rim, 2.5);
-        gl_FragColor = vec4(uColor, rim * 0.35);
+        vec3 v=normalize(cameraPosition-vP);
+        float r=pow(1.-dot(vN,v),3.);
+        gl_FragColor=vec4(vec3(0.83,0.69,0.21),r*0.28);
       }
     `,
     transparent: true,
@@ -220,41 +313,43 @@ document.querySelectorAll('a[href^="#"]').forEach(a => {
   });
   scene.add(new THREE.Mesh(atmoGeo, atmoMat));
 
-  /* ── Stars / particle field ── */
-  const starCount = 2000;
-  const starGeo   = new THREE.BufferGeometry();
-  const starPos   = new Float32Array(starCount * 3);
-  for (let i = 0; i < starCount * 3; i++) starPos[i] = (Math.random() - 0.5) * 40;
-  starGeo.setAttribute('position', new THREE.BufferAttribute(starPos, 3));
-  const starMat = new THREE.PointsMaterial({ color: 0xffd700, size: 0.025, transparent: true, opacity: 0.55 });
-  scene.add(new THREE.Points(starGeo, starMat));
+  /* ── Thin outer glow ring ── */
+  const glowGeo = new THREE.SphereGeometry(1.18, 64, 64);
+  const glowMat = new THREE.ShaderMaterial({
+    uniforms: {},
+    vertexShader: `
+      varying vec3 vN; varying vec3 vP;
+      void main(){ vN=normalize(normalMatrix*normal); vP=(modelMatrix*vec4(position,1.)).xyz; gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.); }
+    `,
+    fragmentShader: `
+      varying vec3 vN; varying vec3 vP;
+      void main(){
+        vec3 v=normalize(cameraPosition-vP);
+        float r=pow(1.-dot(vN,v),5.);
+        gl_FragColor=vec4(vec3(0.9,0.75,0.25),r*0.12);
+      }
+    `,
+    transparent: true,
+    side: THREE.BackSide,
+    depthWrite: false,
+  });
+  scene.add(new THREE.Mesh(glowGeo, glowMat));
 
-  /* ── Connection nodes on globe surface ── */
-  const nodePositions = [
-    // Major city lat/lon pairs (degrees) → convert to 3D
-    [52.5,  13.4],  // Berlin
-    [51.5,  -0.1],  // London
-    [48.8,   2.3],  // Paris
-    [40.7, -74.0],  // New York
-    [34.0, -118.2], // LA
-    [35.7, 139.7],  // Tokyo
-    [22.3, 114.2],  // Hong Kong
-    [1.3,  103.8],  // Singapore
-    [-33.9,  18.4], // Cape Town
-    [55.7,  37.6],  // Moscow
-    [19.4, -99.1],  // Mexico City
-    [-23.5, -46.6], // São Paulo
-    [28.6,  77.2],  // Delhi
-    [37.6, 126.9],  // Seoul
-    [41.0,  28.9],  // Istanbul
-    [-37.8, 145.0], // Melbourne
-    [59.9,  30.3],  // St. Petersburg
-    [24.5,  54.4],  // Abu Dhabi
-  ];
+  /* ── Star field ── */
+  const starGeo = new THREE.BufferGeometry();
+  const starArr = new Float32Array(2400 * 3);
+  for (let i = 0; i < 2400 * 3; i++) starArr[i] = (Math.random() - .5) * 60;
+  starGeo.setAttribute('position', new THREE.BufferAttribute(starArr, 3));
+  scene.add(new THREE.Points(starGeo, new THREE.PointsMaterial({
+    color: 0xfff8e0, size: 0.028, transparent: true, opacity: 0.55
+  })));
 
-  function latLonToVec3(lat, lon, r) {
-    const phi   = (90 - lat) * (Math.PI / 180);
-    const theta = (lon + 180) * (Math.PI / 180);
+  /* ────────────────────────────────────────
+     CITY NODES + CONNECTION ARCS
+  ──────────────────────────────────────── */
+  function ll2v3(lat, lon, r) {
+    const phi   = (90 - lat) * Math.PI / 180;
+    const theta = (lon + 180) * Math.PI / 180;
     return new THREE.Vector3(
       -r * Math.sin(phi) * Math.cos(theta),
        r * Math.cos(phi),
@@ -262,334 +357,177 @@ document.querySelectorAll('a[href^="#"]').forEach(a => {
     );
   }
 
-  const nodeMeshes = [];
-  const nodeGeo = new THREE.SphereGeometry(0.015, 8, 8);
-  const nodeMat = new THREE.MeshBasicMaterial({ color: GOLD2 });
-
-  nodePositions.forEach(([lat, lon]) => {
-    const pos  = latLonToVec3(lat, lon, 1.01);
-    const mesh = new THREE.Mesh(nodeGeo, nodeMat);
-    mesh.position.copy(pos);
-    globe.add(mesh);
-    nodeMeshes.push({ mesh, pos });
-
-    // pulse ring
-    const ringGeo = new THREE.RingGeometry(0.02, 0.04, 16);
-    const ringMat = new THREE.MeshBasicMaterial({ color: GOLD, transparent: true, opacity: 0.6, side: THREE.DoubleSide });
-    const ring = new THREE.Mesh(ringGeo, ringMat);
-    ring.position.copy(pos);
-    ring.lookAt(new THREE.Vector3(0, 0, 0));
-    ring.userData.pulseOffset = Math.random() * Math.PI * 2;
-    globe.add(ring);
-    nodeMeshes.push({ ring, isPulse: true });
-  });
-
-  /* ── Arc connections between nodes ── */
-  const connections = [
-    [0, 1], [0, 2], [0, 9], [0, 14],  // Berlin connections
-    [1, 2], [1, 4], [1, 5],
-    [3, 4], [3, 10], [3, 11],
-    [5, 6], [5, 7], [6, 7],
-    [7, 13], [8, 14], [9, 0],
-    [12, 6], [15, 6], [16, 0], [17, 12],
-    [2, 14], [4, 11], [10, 3],
+  /* Major world cities */
+  const cities = [
+    { name:'Berlin',       lat: 52.5,  lon:  13.4 },
+    { name:'London',       lat: 51.5,  lon:  -0.1 },
+    { name:'Paris',        lat: 48.9,  lon:   2.3 },
+    { name:'New York',     lat: 40.7,  lon: -74.0 },
+    { name:'Los Angeles',  lat: 34.1,  lon:-118.2 },
+    { name:'São Paulo',    lat:-23.5,  lon: -46.6 },
+    { name:'Lagos',        lat:  6.5,  lon:   3.4 },
+    { name:'Cairo',        lat: 30.0,  lon:  31.2 },
+    { name:'Moscow',       lat: 55.8,  lon:  37.6 },
+    { name:'Dubai',        lat: 25.2,  lon:  55.3 },
+    { name:'Mumbai',       lat: 19.1,  lon:  72.9 },
+    { name:'Delhi',        lat: 28.6,  lon:  77.2 },
+    { name:'Singapore',    lat:  1.3,  lon: 103.8 },
+    { name:'Hong Kong',    lat: 22.3,  lon: 114.2 },
+    { name:'Shanghai',     lat: 31.2,  lon: 121.5 },
+    { name:'Tokyo',        lat: 35.7,  lon: 139.7 },
+    { name:'Seoul',        lat: 37.6,  lon: 126.9 },
+    { name:'Sydney',       lat:-33.9,  lon: 151.2 },
+    { name:'Johannesburg', lat:-26.2,  lon:  28.0 },
+    { name:'Chicago',      lat: 41.9,  lon: -87.6 },
+    { name:'Mexico City',  lat: 19.4,  lon: -99.1 },
+    { name:'Istanbul',     lat: 41.0,  lon:  28.9 },
   ];
 
-  function createArc(p1, p2, color, opacity) {
-    const points = [];
-    const segments = 48;
-    for (let i = 0; i <= segments; i++) {
-      const t  = i / segments;
-      const pt = p1.clone().lerp(p2, t).normalize();
-      const h  = Math.sin(Math.PI * t) * 0.22;
-      pt.multiplyScalar(1.01 + h);
-      points.push(pt);
-    }
-    const geo = new THREE.BufferGeometry().setFromPoints(points);
-    const mat = new THREE.LineBasicMaterial({ color, transparent: true, opacity, linewidth: 1 });
-    return new THREE.Line(geo, mat);
+  /* Node dots on surface */
+  const nodeMat  = new THREE.MeshBasicMaterial({ color: 0xf0d878 });
+  const nodeGeo  = new THREE.SphereGeometry(0.013, 8, 8);
+  const pulseGeo = new THREE.RingGeometry(0.018, 0.034, 16);
+  const pulseMat = new THREE.MeshBasicMaterial({ color: 0xd4af37, transparent: true, side: THREE.DoubleSide });
+
+  const pulseRings = [];
+  const cityVecs   = cities.map(c => ll2v3(c.lat, c.lon, 1.012));
+
+  cities.forEach((_, i) => {
+    const pos  = cityVecs[i];
+    const dot  = new THREE.Mesh(nodeGeo, nodeMat);
+    dot.position.copy(pos);
+    globe.add(dot);
+
+    const ring = new THREE.Mesh(pulseGeo, pulseMat.clone());
+    ring.position.copy(pos);
+    ring.lookAt(new THREE.Vector3(0, 0, 0));
+    ring.userData.phase = Math.random() * Math.PI * 2;
+    globe.add(ring);
+    pulseRings.push(ring);
+  });
+
+  /* ── Build arcs (bezier curves over the surface) ── */
+  const connections = [
+    [0,1],[0,2],[0,8],[0,21],[0,11],   // Berlin hub
+    [1,2],[1,3],[1,7],[1,21],
+    [3,4],[3,19],[3,20],
+    [4,20],[5,20],[5,6],
+    [6,18],[7,18],[7,9],
+    [9,10],[9,11],[10,12],[11,12],
+    [12,13],[12,15],[13,14],[14,15],
+    [15,16],[15,17],[16,17],
+    [8,21],[8,9],[0,3],[3,5],
+  ];
+
+  function makeArc(i1, i2) {
+    const p1  = cityVecs[i1].clone();
+    const p2  = cityVecs[i2].clone();
+    const mid = p1.clone().lerp(p2, .5).normalize();
+    const h   = .15 + p1.distanceTo(p2) * .22;
+    mid.multiplyScalar(1.0 + h);
+
+    const curve  = new THREE.QuadraticBezierCurve3(p1, mid, p2);
+    const pts    = curve.getPoints(64);
+    const geo    = new THREE.BufferGeometry().setFromPoints(pts);
+    const mat    = new THREE.LineBasicMaterial({
+      color:       0xd4af37,
+      transparent: true,
+      opacity:     0.18 + Math.random() * 0.15,
+      linewidth:   1,
+    });
+    return { line: new THREE.Line(geo, mat), curve, phase: Math.random() * Math.PI * 2 };
   }
 
-  const arcGroup = new THREE.Group();
-  connections.forEach(([a, b]) => {
-    const p1 = latLonToVec3(...nodePositions[a], 1.01);
-    const p2 = latLonToVec3(...nodePositions[b], 1.01);
-    const arc = createArc(p1, p2, GOLD, 0.25);
-    arc.userData.flashOffset = Math.random() * Math.PI * 2;
-    arcGroup.add(arc);
-  });
-  globe.add(arcGroup);
+  const arcs = connections.map(([a, b]) => makeArc(a, b));
+  arcs.forEach(a => globe.add(a.line));
 
-  /* ── Animated "data packet" dots on arcs ── */
-  const packetCount = connections.length;
-  const packets = [];
-  connections.forEach(([a, b]) => {
-    const p1  = latLonToVec3(...nodePositions[a], 1.01);
-    const p2  = latLonToVec3(...nodePositions[b], 1.01);
-    const geo  = new THREE.SphereGeometry(0.01, 6, 6);
-    const mat  = new THREE.MeshBasicMaterial({ color: GOLD2 });
-    const mesh = new THREE.Mesh(geo, mat);
+  /* ── Data packets travelling along arcs ── */
+  const packetMat = new THREE.MeshBasicMaterial({ color: 0xfff0a0, transparent: true });
+  const packetGeo = new THREE.SphereGeometry(0.009, 6, 6);
+
+  const packets = arcs.map(arc => {
+    const mesh = new THREE.Mesh(packetGeo, packetMat.clone());
     globe.add(mesh);
-    packets.push({ mesh, p1, p2, t: Math.random(), speed: 0.003 + Math.random() * 0.004 });
+    return {
+      mesh,
+      curve:  arc.curve,
+      t:      Math.random(),
+      speed:  0.0018 + Math.random() * 0.0025,
+      phase:  Math.random() * Math.PI * 2,
+    };
   });
 
   /* ── Light ── */
-  const ambient = new THREE.AmbientLight(0xffffff, 0.15);
-  scene.add(ambient);
-  const sunLight = new THREE.DirectionalLight(0xffd080, 1.2);
-  sunLight.position.set(3, 2, 3);
-  scene.add(sunLight);
-  const rimLight = new THREE.DirectionalLight(0xd4af37, 0.4);
-  rimLight.position.set(-3, -1, -2);
-  scene.add(rimLight);
+  scene.add(new THREE.AmbientLight(0xfff8e0, 0.20));
+  const sun = new THREE.DirectionalLight(0xffd080, 1.1);
+  sun.position.set(4, 3, 3);
+  scene.add(sun);
+  const rim = new THREE.DirectionalLight(0xd4af37, 0.30);
+  rim.position.set(-3, -2, -2);
+  scene.add(rim);
 
-  /* ── Scroll / mouse interaction ── */
-  let scrollY = window.scrollY;
-  let mouseX  = 0, mouseY = 0;
-  let targetRotX = 0, targetRotY = 0;
-  let currentRotX = 0, currentRotY = 0;
-
-  window.addEventListener('scroll', () => { scrollY = window.scrollY; });
+  /* ── Mouse parallax ── */
+  let mxTarget = 0, myTarget = 0, mxCur = 0, myCur = 0;
   document.addEventListener('mousemove', e => {
-    mouseX = (e.clientX / innerWidth  - 0.5) * 2;
-    mouseY = (e.clientY / innerHeight - 0.5) * 2;
+    mxTarget = (e.clientX / window.innerWidth  - .5) * .4;
+    myTarget = (e.clientY / window.innerHeight - .5) * .25;
   });
 
-  /* ── Resize ── */
-  function onResize() {
-    const w = hero.offsetWidth, h = hero.offsetHeight;
-    camera.aspect = w / h;
-    camera.updateProjectionMatrix();
-    renderer.setSize(w, h);
+  /* ── Position globe right of hero content ── */
+  function positionGlobe() {
+    if (window.innerWidth < 768) {
+      globe.position.set(0, 0, 0);
+      globe.scale.setScalar(.70);
+    } else {
+      globe.position.set(1.65, 0, 0);
+      globe.scale.setScalar(1.0);
+    }
   }
-  window.addEventListener('resize', onResize);
-  onResize();
+  positionGlobe();
+  window.addEventListener('resize', positionGlobe);
 
   /* ── Animation loop ── */
   let time = 0;
-  globe.position.set(1.8, 0, 0);   // offset right of text
-
   function animate() {
     requestAnimationFrame(animate);
-    time += 0.008;
+    time += 0.007;
 
-    // Update shader time
+    /* Update shader */
     globeMat.uniforms.uTime.value = time;
 
-    // Scroll-driven rotation + camera pull-back
-    const heroH = hero.offsetHeight;
-    const progress = Math.min(scrollY / heroH, 1);
-    globe.rotation.y  = time * 0.12 + progress * Math.PI * 0.6;
-    globe.rotation.x  = progress * 0.3;
-    globe.position.y  = -progress * 0.5;
-    globe.position.z  = -progress * 0.8;
-    camera.position.z = 3.6 + progress * 0.4;
+    /* Auto-rotate */
+    globe.rotation.y = time * 0.09;
 
-    // Subtle mouse parallax
-    targetRotX = mouseY * 0.06;
-    targetRotY = mouseX * 0.06;
-    currentRotX += (targetRotX - currentRotX) * 0.04;
-    currentRotY += (targetRotY - currentRotY) * 0.04;
-    globe.rotation.x += currentRotX;
-    globe.rotation.z  = currentRotY * 0.3;
+    /* Subtle mouse parallax on camera, not globe */
+    mxCur += (mxTarget - mxCur) * 0.04;
+    myCur += (myTarget - myCur) * 0.04;
+    camera.position.x = mxCur * .6;
+    camera.position.y = -myCur * .4;
+    camera.lookAt(globe.position);
 
-    // Pulse rings
-    arcGroup.children.forEach((arc, i) => {
-      const flash = 0.15 + 0.15 * Math.sin(time * 1.8 + arc.userData.flashOffset);
-      arc.material.opacity = flash;
+    /* Pulse rings */
+    pulseRings.forEach(ring => {
+      const s = 1.0 + .55 * Math.abs(Math.sin(time * 1.1 + ring.userData.phase));
+      ring.scale.setScalar(s);
+      ring.material.opacity = .55 - .45 * Math.abs(Math.sin(time * 1.1 + ring.userData.phase));
     });
 
-    nodeMeshes.forEach(item => {
-      if (item.isPulse && item.ring) {
-        const s = 1 + 0.4 * Math.abs(Math.sin(time * 1.2 + item.ring.userData.pulseOffset));
-        item.ring.scale.setScalar(s);
-        item.ring.material.opacity = 0.6 - 0.4 * Math.abs(Math.sin(time * 1.2 + (item.ring.userData.pulseOffset || 0)));
-      }
+    /* Arc flicker */
+    arcs.forEach((arc, i) => {
+      arc.line.material.opacity = 0.12 + .18 * (.5 + .5 * Math.sin(time * .9 + arc.phase));
     });
 
-    // Move data packets along arcs
+    /* Move packets */
     packets.forEach(p => {
       p.t += p.speed;
       if (p.t > 1) p.t = 0;
-      const t   = p.t;
-      const mid = p.p1.clone().lerp(p.p2, t).normalize();
-      mid.multiplyScalar(1.01 + Math.sin(Math.PI * t) * 0.22);
-      p.mesh.position.copy(mid);
-      // fade in/out
-      p.mesh.material.opacity = Math.sin(Math.PI * t);
+      const pos = p.curve.getPoint(p.t);
+      p.mesh.position.copy(pos);
+      p.mesh.material.opacity = Math.sin(p.t * Math.PI) * .9;
     });
 
     renderer.render(scene, camera);
   }
   animate();
 
-  // Globe position: right on desktop, center + small on mobile
-  function positionGlobe() {
-    if (innerWidth < 768) {
-      globe.position.set(0, 0, 0);
-      globe.scale.setScalar(0.75);
-    } else {
-      globe.position.set(1.8, 0, 0);
-      globe.scale.setScalar(1);
-    }
-  }
-  window.addEventListener('resize', positionGlobe);
-  positionGlobe();
-
-})();
-
-/* =============================================
-   CONTACT SECTION — mini ambient globe
-============================================= */
-(function initContactGlobe() {
-  if (typeof THREE === 'undefined') return;
-  const canvas = document.getElementById('contactGlobe');
-  if (!canvas) return;
-
-  const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
-  renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
-
-  const scene  = new THREE.Scene();
-  const camera = new THREE.PerspectiveCamera(50, 1, 0.1, 100);
-  camera.position.z = 3;
-
-  const geo = new THREE.SphereGeometry(1, 64, 64);
-  const mat = new THREE.ShaderMaterial({
-    uniforms: { uTime: { value: 0 } },
-    vertexShader: `
-      varying vec3 vNormal; varying vec3 vPos; varying vec2 vUv;
-      void main(){ vNormal=normalize(normalMatrix*normal); vPos=(modelMatrix*vec4(position,1.)).xyz; vUv=uv; gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.); }
-    `,
-    fragmentShader: `
-      uniform float uTime;
-      varying vec3 vNormal; varying vec3 vPos; varying vec2 vUv;
-      float grid(vec2 uv){ float u=mod(uv.x*20.,1.); float v=mod(uv.y*10.,1.); return step(.96,u)+step(.96,v); }
-      void main(){
-        vec3 view=normalize(cameraPosition-vPos);
-        float rim=pow(1.-dot(vNormal,view),3.);
-        float g=grid(vUv)*0.2;
-        vec3 col=vec3(0.05,0.04,0.02)+vec3(0.83,0.69,0.21)*(g+rim*0.6);
-        gl_FragColor=vec4(col,rim*0.8+g*0.5);
-      }
-    `,
-    transparent: true, side: THREE.FrontSide,
-  });
-  const mesh = new THREE.Mesh(geo, mat);
-  scene.add(mesh);
-  scene.add(new THREE.AmbientLight(0xffd070, 0.4));
-
-  let t = 0;
-  const section = document.getElementById('contact');
-
-  function resizeCG() {
-    if (!section) return;
-    const w = section.offsetWidth, h = section.offsetHeight;
-    renderer.setSize(w, h);
-    camera.aspect = w / h;
-    camera.updateProjectionMatrix();
-  }
-  resizeCG();
-  window.addEventListener('resize', resizeCG);
-
-  function animCG() {
-    requestAnimationFrame(animCG);
-    t += 0.005;
-    mat.uniforms.uTime.value = t;
-    mesh.rotation.y = t * 0.2;
-    renderer.render(scene, camera);
-  }
-  animCG();
-})();
-
-/* =============================================
-   SERVICE CARDS — 3D TILT ON HOVER
-============================================= */
-document.querySelectorAll('.scard').forEach(card => {
-  card.addEventListener('mousemove', e => {
-    const r = card.getBoundingClientRect();
-    const x = ((e.clientX - r.left) / r.width  - 0.5) * 10;
-    const y = ((e.clientY - r.top)  / r.height - 0.5) * 10;
-    card.style.transform = `perspective(700px) rotateY(${x}deg) rotateX(${-y}deg)`;
-  });
-  card.addEventListener('mouseleave', () => {
-    card.style.transform = '';
-    card.style.transition = 'transform 0.6s cubic-bezier(0.16,1,0.3,1), background 0.4s';
-  });
-  card.addEventListener('mouseenter', () => { card.style.transition = ''; });
-});
-
-/* pricing cards */
-document.querySelectorAll('.pcard').forEach(card => {
-  card.addEventListener('mousemove', e => {
-    const r = card.getBoundingClientRect();
-    const x = ((e.clientX - r.left) / r.width  - 0.5) * 8;
-    const y = ((e.clientY - r.top)  / r.height - 0.5) * 8;
-    card.style.transform = `perspective(800px) rotateY(${x}deg) rotateX(${-y}deg) translateY(-6px)`;
-  });
-  card.addEventListener('mouseleave', () => { card.style.transform = ''; });
-});
-
-/* =============================================
-   WHY ITEMS — gold number flash on scroll
-============================================= */
-document.querySelectorAll('.why__num').forEach(num => {
-  new IntersectionObserver(([e]) => {
-    if (e.isIntersecting) {
-      num.style.transition = 'color 0.6s';
-      num.style.color = 'rgba(212,175,55,0.8)';
-      setTimeout(() => { num.style.color = ''; num.style.transition = 'color 1.5s'; }, 700);
-    }
-  }, { threshold: 0.9 }).observe(num);
-});
-
-/* =============================================
-   GOLD PARTICLE CANVAS — hero overlay
-============================================= */
-(function initParticles() {
-  const hero = document.getElementById('hero');
-  if (!hero) return;
-
-  const cvs = document.createElement('canvas');
-  cvs.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:2;';
-  hero.appendChild(cvs);
-
-  const ctx = cvs.getContext('2d');
-  let W, H;
-  const particles = [];
-
-  function resize() {
-    W = cvs.width  = hero.offsetWidth;
-    H = cvs.height = hero.offsetHeight;
-  }
-  resize();
-  window.addEventListener('resize', resize);
-
-  for (let i = 0; i < 60; i++) {
-    particles.push({
-      x: Math.random() * 1000,
-      y: Math.random() * 800,
-      vx: (Math.random() - 0.5) * 0.3,
-      vy: -0.2 - Math.random() * 0.4,
-      size: 0.8 + Math.random() * 1.6,
-      alpha: 0.2 + Math.random() * 0.6,
-      life: Math.random(),
-    });
-  }
-
-  function drawParticles() {
-    ctx.clearRect(0, 0, W, H);
-    particles.forEach(p => {
-      p.x  += p.vx;
-      p.y  += p.vy;
-      p.life += 0.003;
-      if (p.life > 1) { p.life = 0; p.x = Math.random() * W; p.y = H + 10; }
-      const a = Math.sin(p.life * Math.PI) * p.alpha;
-      ctx.beginPath();
-      ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-      ctx.fillStyle = `rgba(212,175,55,${a})`;
-      ctx.fill();
-    });
-    requestAnimationFrame(drawParticles);
-  }
-  drawParticles();
 })();
